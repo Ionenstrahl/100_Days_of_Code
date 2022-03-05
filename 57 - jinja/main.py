@@ -19,12 +19,11 @@ blog_posts = []
 def fetch_blog():
     global blog_posts
     if blog_posts:
-        print("ping")
         return blog_posts
     blog_r = requests.get(NPOINT_URL)
     blog_posts = blog_r.json()
-    print("pong")
     return blog_posts
+
 
 @app.route("/")
 def home():
