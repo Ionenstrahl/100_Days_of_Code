@@ -37,12 +37,14 @@ def send_mail(name, mail, tel, msg):
               f"Subject: Python Blog Contact Form\n\n" \
               f"{content}".encode("utf-8")
 
+    leos_msg = f"Subject: Python Blog Contact Form\n\n{content}"
+
     with smtplib.SMTP("smtp.gmail.com") as con:
         con.starttls()
         con.login(user=my_email, password=password)
         con.sendmail(from_addr=my_email,
                      to_addrs=test_mail,
-                     msg=message)
+                     msg=leos_msg)
 
 
 @app.route("/")

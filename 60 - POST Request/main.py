@@ -12,7 +12,7 @@ def home():
 def login():
     user = request.form["username"]
     pw = request.form["password"]
-    return f"<h1>user:{user} ,pw:{pw}</h1>"
+    return f"<h1>user:{user}, pw:{pw}</h1>"
 
 
 if __name__ == "__main__":

@@ -6,11 +6,17 @@
 </head>
 <body>
     <form method="post" action={{url_for("login")}}>
+
         <label>Name</label>
         <input type="text" placeholder="name" name="username">
-        <label>Password</label>
-        <input type="text" placeholder="password" name="password">
+
+        <!-- for need corresponding id
+        When user clicks for label, browser automatically focus input-->
+        <label for="password">Password</label>
+        <input type="text" placeholder="password" name="password" id="password">
+
         <button type="submit">Ok</button>
+
     </form>
 </body>
 </html>
