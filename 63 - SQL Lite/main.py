@@ -15,7 +15,7 @@ db = SQLAlchemy(app)
 # db = sqlite3.connect("books-collection.db")
 # cursor = db.cursor()
 
-# create DB
+# create Table
 # cursor.execute("CREATE TABLE books ("
 #               "id INTEGER PRIMARY KEY, "
 #               "title varchar(250) NOT NULL UNIQUE, "
