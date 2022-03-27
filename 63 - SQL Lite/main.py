@@ -38,7 +38,7 @@ class Book(db.Model):
     def __repr__(self):
         return f"{self.title} - {self.author} - {self.rating}"
 
-# db.drop_all()   # delte all tables
+# db.drop_all()   # delete all tables
 # db.create_all() # create defined table (only needed once)
 
 
@@ -79,7 +79,7 @@ def edit():
 
 if __name__ == "__main__":
     app.run(debug=False)
-    # Debug mode off, otherwise it will server will restart and try to add a duplicate, thworing:
+    # Debug mode off, otherwise it will server will restart and try to add a duplicate, throwing:
     #
     # sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: book.title
     # [SQL: INSERT INTO book (title, author, rating) VALUES (?, ?, ?)]
@@ -122,3 +122,4 @@ if __name__ == "__main__":
 # book_to_delete = Book.query.get(book_id)
 # db.session.delete(book_to_delete)
 # db.session.commit()
+#

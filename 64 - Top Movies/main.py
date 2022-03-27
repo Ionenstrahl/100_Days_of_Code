@@ -65,7 +65,9 @@ def get_movie_infos(title: str):
         "include_adult": True
     }
     r = requests.get(url, params=payload)
+    print(r.json()["results"])
     data = r.json()["results"][0]
+    print(data)
     """
     hier muss es doch eine schöne Lösung geben
     """
