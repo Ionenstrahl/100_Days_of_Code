@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, url_for, redirect, flash, send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
+from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user
 
 app = Flask(__name__)
 
@@ -22,7 +22,7 @@ class User(UserMixin, db.Model):
 # db.create_all()
 
 
-## takes users unicode ID and returns user object.
+## takes users ID and returns user object.
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -47,10 +47,7 @@ def register():
         hash_result = generate_password_hash(pw,
                                            method='pbkdf2:sha256',
                                            salt_length=8)
-        """
-        method, salt, hashed_pw = hash_result.split("$")
-        not needed, as eveything is saved in on str :(
-        """
+
         user = User(
             email=email,
             password=hash_result,

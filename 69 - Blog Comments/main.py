@@ -10,6 +10,7 @@ from flask_login import UserMixin, login_user, LoginManager, login_required, cur
 from forms import CreatePostForm, RegisterForm, LoginForm, CommentForm
 from flask_gravatar import Gravatar
 from functools import wraps
+import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
@@ -17,7 +18,7 @@ ckeditor = CKEditor(app)
 Bootstrap(app)
 
 ##CONNECT TO DB
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL",  "sqlite:///blog.db")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -63,20 +64,15 @@ class Comment(db.Model):
     author = relationship("User", back_populates="comments")
     blog_post_id = Column(Integer, ForeignKey('blog_posts.id'))
     blog_post = relationship("BlogPost", back_populates="comments")
-db.create_all()
+# db.create_all()
 
 
-## takes users unicode ID and returns user object.
+## takes users ID and returns user object.
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-"""
-Angela schaut in html nur nach:
-{% if current_user.id == 1 %}
-Das wirft bei mir einen Fehler, wenn ich nicht eingeloggt bin
-"""
 def check_admin():
     if current_user and current_user.is_authenticated and current_user.id == int(1):
         return True
@@ -86,7 +82,7 @@ def check_admin():
 def admin_only(f):
     @wraps(f)
     def wrapper_function(*args, **kwargs):
-        if check_admin():
+        if current_user.id == 1:
             return f(*args, **kwargs)
         # return abort(403)
         # -> 403 Forbidden: You don't have the permission to access the requested resource.
@@ -103,13 +99,13 @@ def admin_only(f):
         # -> RuntimeError: Attempted to generate a URL without the application context being pushed.
         #    This has to be executed when application context is available.
 
-    return wrapper_function()
+    return wrapper_function
 
 
 @app.route('/')
 def get_all_posts():
     posts = BlogPost.query.all()
-    return render_template("index.html", all_posts=posts, is_admin=check_admin())
+    return render_template("index.html", all_posts=posts)
 
 
 @app.route('/register', methods=["GET", "POST"])
@@ -181,7 +177,7 @@ def show_post(post_id):
         )
         db.session.add(new_comment)
         db.session.commit()
-    return render_template("post.html", post=requested_post, is_admin=check_admin(), form=form)
+    return render_template("post.html", post=requested_post, form=form)
 
 
 @app.route("/about")
@@ -196,7 +192,7 @@ def contact():
 
 @app.route("/new-post", methods=["GET", "POST"])
 @login_required
-# @admin_only
+@admin_only
 def add_new_post():
     form = CreatePostForm()
     if form.validate_on_submit():
